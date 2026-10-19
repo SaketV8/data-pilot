@@ -274,14 +274,15 @@ Generated with `tree`, leaving out dependencies, caches, lock files and tool con
 │   │   │   │   ├── query-result-renderer.tsx   # picks the view from display.type
 │   │   │   │   ├── summary-result.tsx
 │   │   │   │   └── table-result.tsx
-│   │   │   ├── ui                      # shadcn/ui (Base UI) primitives, incl. alert-dialog, dropdown-menu
+│   │   │   ├── ui                      # shadcn/ui (Base UI) primitives, incl. alert-dialog, dialog, progress
 │   │   │   ├── chat-panel.tsx
 │   │   │   ├── dataset-card.tsx        # schema, sheet picker, delete (with confirmation)
 │   │   │   ├── data-table.tsx
 │   │   │   ├── mode-toggle.tsx         # light / dark / system menu in the header
 │   │   │   ├── preview-panel.tsx
 │   │   │   ├── theme-provider.tsx      # theme state, sets .dark on <html> before hydration
-│   │   │   └── upload-card.tsx
+│   │   │   ├── upload-card.tsx
+│   │   │   └── usage-dialog.tsx        # LLM calls this minute (progress bar) and in total
 │   │   ├── integrations
 │   │   │   └── tanstack-query
 │   │   │       ├── devtools.tsx
@@ -303,7 +304,7 @@ Generated with `tree`, leaving out dependencies, caches, lock files and tool con
 │   ├── README.md
 │   └── vite.config.ts
 ├── server                              # FastAPI backend
-│   ├── data                            # uploaded datasets, created at runtime (gitignored)
+│   ├── data                            # datasets + usage.json, created at runtime (gitignored)
 │   ├── sample_data
 │   │   ├── sales.csv
 │   │   └── students.csv
@@ -320,7 +321,8 @@ Generated with `tree`, leaving out dependencies, caches, lock files and tool con
 │   │       ├── main.py                 # ASGI app for uvicorn
 │   │       ├── query.py                # sandboxed, time-limited query execution
 │   │       ├── schemas.py              # Pydantic API models (camelCase JSON)
-│   │       └── sql_guard.py            # sqlglot SQL validation
+│   │       ├── sql_guard.py            # sqlglot SQL validation
+│   │       └── usage.py                # LLM call counter, saved to data/usage.json
 │   ├── .env.example
 │   ├── pyproject.toml
 │   └── README.md
