@@ -102,59 +102,65 @@ function Home() {
       </header>
 
       <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col gap-4 px-4 py-4 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-6 lg:py-6">
-        <button
-          type="button"
-          aria-expanded={panelOpen}
-          aria-controls="data-panel"
-          onClick={() => setPanelOpen((open) => !open)}
-          className="flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2 text-left text-sm lg:hidden"
-        >
-          <DatabaseIcon className="size-4 shrink-0 text-muted-foreground" />
-          <span className="min-w-0 flex-1 truncate font-medium">
-            {info ? info.filename : 'Upload data'}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {panelOpen ? 'Hide' : info ? 'Dataset & upload' : 'Show'}
-          </span>
-          <ChevronDownIcon
-            className={cn(
-              'size-4 transition-transform',
-              panelOpen && 'rotate-180',
-            )}
-          />
-        </button>
-
-        <aside
-          id="data-panel"
-          className={cn(
-            'shrink-0 space-y-4 overflow-y-auto lg:block lg:max-h-none lg:min-h-0',
-            panelOpen ? 'max-h-[55dvh]' : 'hidden',
-          )}
-        >
-          <UploadCard onUploaded={onUploaded} />
-          {info && (
-            <DatasetCard
-              info={info}
-              canSwitchSheet={source?.datasetId === info.id}
-              switchingSheet={reupload.isPending}
-              onSheetChange={switchSheet}
-              deleting={remove.isPending}
-              onDelete={() =>
-                remove.mutate(info.id, {
-                  onSuccess: () => {
-                    setSource(null)
-                    select(undefined)
-                  },
-                })
-              }
+        {/* Below lg the panel collapses into one card under its toggle; on lg
+            it is a plain column of cards. */}
+        <div className="flex shrink-0 flex-col rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 lg:min-h-0 lg:rounded-none lg:bg-transparent lg:ring-0">
+          <button
+            type="button"
+            aria-expanded={panelOpen}
+            aria-controls="data-panel"
+            onClick={() => setPanelOpen((open) => !open)}
+            className="flex w-full items-center gap-2 rounded-xl px-4 py-3 text-left text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50 lg:hidden"
+          >
+            <DatabaseIcon className="size-4 shrink-0 text-muted-foreground" />
+            <span className="min-w-0 flex-1 truncate font-medium">
+              {info ? info.filename : 'Upload data'}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {panelOpen ? 'Hide' : info ? 'Dataset & upload' : 'Show'}
+            </span>
+            <ChevronDownIcon
+              className={cn(
+                'size-4 transition-transform',
+                panelOpen && 'rotate-180',
+              )}
             />
-          )}
-          {reupload.isError && (
-            <Alert variant="destructive">
-              <AlertDescription>{reupload.error.message}</AlertDescription>
-            </Alert>
-          )}
-        </aside>
+          </button>
+
+          <aside
+            id="data-panel"
+            className={cn(
+              // lg:p-px: the cards' ring border draws 1px outside them, which
+              // this scroll container would otherwise clip.
+              'space-y-4 overflow-y-auto border-t p-3 lg:block lg:max-h-none lg:min-h-0 lg:flex-1 lg:border-t-0 lg:p-px',
+              panelOpen ? 'max-h-[55dvh]' : 'hidden',
+            )}
+          >
+            <UploadCard onUploaded={onUploaded} />
+            {info && (
+              <DatasetCard
+                info={info}
+                canSwitchSheet={source?.datasetId === info.id}
+                switchingSheet={reupload.isPending}
+                onSheetChange={switchSheet}
+                deleting={remove.isPending}
+                onDelete={() =>
+                  remove.mutate(info.id, {
+                    onSuccess: () => {
+                      setSource(null)
+                      select(undefined)
+                    },
+                  })
+                }
+              />
+            )}
+            {reupload.isError && (
+              <Alert variant="destructive">
+                <AlertDescription>{reupload.error.message}</AlertDescription>
+              </Alert>
+            )}
+          </aside>
+        </div>
 
         <section className="flex min-h-0 min-w-0 flex-1 flex-col gap-4">
           {health.isError && (
@@ -199,7 +205,9 @@ function Home() {
               </TabsContent>
               <TabsContent
                 value="preview"
-                className="min-h-0 overflow-y-auto pt-2"
+                // -mx-1 px-1 pb-1: room for the pager buttons' focus ring,
+                // which this scroll container would otherwise clip.
+                className="-mx-1 min-h-0 overflow-y-auto px-1 pt-2 pb-1"
               >
                 <PreviewPanel datasetId={dataset.data.id} />
               </TabsContent>
