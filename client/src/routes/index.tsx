@@ -101,10 +101,10 @@ function Home() {
         </div>
       </header>
 
-      <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col gap-4 px-4 py-4 lg:grid lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-6 lg:py-6">
+      <main className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col gap-4 px-4 py-4 lg:grid lg:grid-cols-[344px_minmax(0,1fr)] lg:gap-6 lg:py-6">
         {/* Below lg the panel collapses into one card under its toggle; on lg
             it is a plain column of cards. */}
-        <div className="flex shrink-0 flex-col rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 lg:min-h-0 lg:rounded-none lg:bg-transparent lg:ring-0">
+        <div className="flex shrink-0 flex-col rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 lg:min-h-0 lg:rounded-none lg:border-r lg:bg-transparent lg:pr-2 lg:ring-0">
           <button
             type="button"
             aria-expanded={panelOpen}
@@ -130,9 +130,10 @@ function Home() {
           <aside
             id="data-panel"
             className={cn(
-              // lg:p-px: the cards' ring border draws 1px outside them, which
-              // this scroll container would otherwise clip.
-              'space-y-4 overflow-y-auto border-t p-3 lg:block lg:max-h-none lg:min-h-0 lg:flex-1 lg:border-t-0 lg:p-px',
+              // lg:py-px lg:pl-px: the cards' ring border draws 1px outside
+              // them, which this scroll container would otherwise clip;
+              // lg:pr-4 keeps the scrollbar off the cards.
+              'scrollbar-thin space-y-4 overflow-y-auto border-t p-3 lg:block lg:max-h-none lg:min-h-0 lg:flex-1 lg:border-t-0 lg:py-px lg:pr-4 lg:pl-px',
               panelOpen ? 'max-h-[55dvh]' : 'hidden',
             )}
           >

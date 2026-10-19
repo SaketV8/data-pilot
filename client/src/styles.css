@@ -58,6 +58,8 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+  --scrollbar: oklch(0.9 0 0);
+  --scrollbar-hover: oklch(0.84 0 0);
   --chart-1: #2a78d6;
   --chart-2: #eb6834;
   --chart-3: #1baf7a;
@@ -84,6 +86,8 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  --scrollbar: oklch(0.32 0 0);
+  --scrollbar-hover: oklch(0.4 0 0);
   --chart-1: #3987e5;
   --chart-2: #d95926;
   --chart-3: #199e70;
@@ -97,5 +101,29 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* Thin, rounded scrollbar for scroll areas. Chromium/Safari use the
+   -webkit- pseudo-elements; Firefox (no support for those) uses the
+   standard properties. */
+@utility scrollbar-thin {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background: var(--scrollbar);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
   }
 }

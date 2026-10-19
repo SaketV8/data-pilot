@@ -150,7 +150,7 @@ export function DatasetCard({
           ) : schema.isError ? (
             <p className="text-sm text-destructive">{schema.error.message}</p>
           ) : (
-            <ul className="max-h-[50vh] divide-y overflow-y-auto rounded-lg border text-sm">
+            <ul className="scrollbar-thin max-h-[50vh] divide-y overflow-y-auto rounded-lg border text-sm">
               {schema.data.columns.map((col) => (
                 <li key={col.name} className="space-y-0.5 px-3 py-2">
                   <div className="flex items-center justify-between gap-2">
