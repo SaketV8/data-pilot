@@ -5,6 +5,7 @@ import type {
   DatasetSchema,
   HealthResponse,
   PreviewPage,
+  UsageStats,
 } from './types'
 
 export const API_URL: string =
@@ -43,6 +44,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   health: () => request<HealthResponse>('/health'),
+
+  usage: () => request<UsageStats>('/usage'),
 
   uploadDataset: (file: File, sheet?: string) => {
     const form = new FormData()

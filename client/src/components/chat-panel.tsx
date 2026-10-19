@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { QueryResultRenderer } from '@/components/results/query-result-renderer'
+import { UsageDialog } from '@/components/usage-dialog'
 import { schemaQuery, useChat } from '@/lib/queries'
 import type { ChatResponse, ChatTurn, DatasetSchema } from '@/lib/types'
 
@@ -127,6 +128,7 @@ export function ChatPanel({ datasetId }: { datasetId: string }) {
           ask(draft)
         }}
       >
+        <UsageDialog />
         <Textarea
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

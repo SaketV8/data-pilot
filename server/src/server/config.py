@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     llm_max_retries: int = 2
     # Extra attempts when the model returns unparseable output or SQL that fails.
     llm_output_retries: int = 2
+    # Shown against the per-minute call count in the UI; not enforced by the server.
+    llm_rate_limit_per_minute: int = Field(default=40, ge=1)
 
     # API
     cors_origins: str = "http://localhost:3000"

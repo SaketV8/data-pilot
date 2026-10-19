@@ -101,3 +101,10 @@ class HealthResponse(ApiModel):
     model: str
     # Lets the client reject oversized files before uploading them.
     max_upload_size_mb: int
+
+
+class UsageStats(ApiModel):
+    llm_calls_last_minute: int
+    llm_calls_total: int
+    rate_limit_per_minute: int
+    tracking_since: str

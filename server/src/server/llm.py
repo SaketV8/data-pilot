@@ -17,6 +17,7 @@ from pydantic import BaseModel, ValidationError
 
 from server.config import Settings
 from server.errors import LLMError, LLMNotConfiguredError
+from server.usage import UsageTracker
 
 logger = logging.getLogger(__name__)
 
@@ -75,11 +76,17 @@ def extract_json(text: str) -> dict:
 
 
 def invoke_structured(
-    model: BaseChatModel, messages: list[BaseMessage], schema: type[T], retries: int
+    model: BaseChatModel,
+    messages: list[BaseMessage],
+    schema: type[T],
+    retries: int,
+    usage: UsageTracker,
 ) -> T:
     """Call the model and validate its JSON reply, re-asking up to `retries` times."""
     conversation = list(messages)
     for attempt in range(retries + 1):
+        # Counted before the call: failed requests still count against the quota.
+        usage.record()
         try:
             reply = model.invoke(conversation)
         except Exception as exc:

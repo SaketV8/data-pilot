@@ -88,3 +88,10 @@ export interface HealthResponse {
   model: string
   maxUploadSizeMb: number
 }
+
+export interface UsageStats {
+  llmCallsLastMinute: number
+  llmCallsTotal: number
+  rateLimitPerMinute: number
+  trackingSince: string
+}

@@ -22,6 +22,7 @@ from server.schemas import (
     DisplayType,
 )
 from server.sql_guard import validate_sql
+from server.usage import UsageTracker
 
 logger = logging.getLogger(__name__)
 
@@ -82,9 +83,15 @@ def describe_schema(schema: DatasetSchema) -> str:
 
 
 class ChatService:
-    def __init__(self, store: DatasetStore, model_factory: Callable[[], BaseChatModel]):
+    def __init__(
+        self,
+        store: DatasetStore,
+        model_factory: Callable[[], BaseChatModel],
+        usage: UsageTracker,
+    ):
         self.store = store
         self.model_factory = model_factory
+        self.usage = usage
         self.settings = store.settings
 
     def answer(self, request: ChatRequest) -> ChatResponse:
@@ -97,7 +104,7 @@ class ChatService:
         result: QueryResult | None = None
         sql = ""
         for attempt in range(retries + 1):
-            plan = invoke_structured(model, messages, AnalysisPlan, retries)
+            plan = invoke_structured(model, messages, AnalysisPlan, retries, self.usage)
             if plan.kind != "query":
                 return self._non_query_response(plan)
             try:
@@ -203,6 +210,7 @@ class ChatService:
                 ],
                 AnswerText,
                 self.settings.llm_output_retries,
+                self.usage,
             )
             return text.answer, text.explanation
         except LLMError:

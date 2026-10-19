@@ -24,7 +24,9 @@ from server.schemas import (
     DatasetSchema,
     HealthResponse,
     PreviewPage,
+    UsageStats,
 )
+from server.usage import UsageTracker
 
 logger = logging.getLogger("server")
 
@@ -37,7 +39,10 @@ def create_app(
 ) -> FastAPI:
     settings = settings or get_settings()
     store = DatasetStore(settings)
-    chat_service = ChatService(store, model_factory or (lambda: create_chat_model(settings)))
+    usage = UsageTracker(store.root / "usage.json", settings.llm_rate_limit_per_minute)
+    chat_service = ChatService(
+        store, model_factory or (lambda: create_chat_model(settings)), usage
+    )
 
     app = FastAPI(title="Data Pilot API", version="0.1.0")
     app.state.store = store
@@ -130,5 +135,9 @@ def create_app(
     @app.post("/chat", response_model=ChatResponse)
     def chat(request: ChatRequest) -> ChatResponse:
         return chat_service.answer(request)
+
+    @app.get("/usage", response_model=UsageStats)
+    def get_usage() -> UsageStats:
+        return usage.snapshot()
 
     return app

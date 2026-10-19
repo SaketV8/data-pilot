@@ -22,6 +22,13 @@ export const healthQuery = queryOptions({
   retry: false,
 })
 
+export const usageQuery = queryOptions({
+  queryKey: ['usage'],
+  queryFn: api.usage,
+  // Poll while the dialog is open so the per-minute window visibly drains.
+  refetchInterval: 5_000,
+})
+
 export const datasetQuery = (id: string) =>
   queryOptions({
     queryKey: datasetKeys.detail(id),
@@ -66,5 +73,10 @@ export function useDeleteDataset() {
 }
 
 export function useChat() {
-  return useMutation({ mutationFn: (body: ChatRequest) => api.chat(body) })
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (body: ChatRequest) => api.chat(body),
+    // Every answer (or failure) makes LLM calls, so the usage counts change.
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['usage'] }),
+  })
 }
