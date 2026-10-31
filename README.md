@@ -37,6 +37,16 @@ LLM then explains the actual result. The model never produces the numbers itself
 
 ## ✅ DataWise in Action
 
+> kindly wait for a sec to load the demo...
+
+<div align="center">
+  <img src="./docs/assets/chat_preview.png" alt="data-pilot chat preview">
+</div>
+
+<div align="center">
+  <img src="./docs/assets/table_preview.png" alt="data-pilot table preview">
+</div>
+
 <!-- Add screenshots here, e.g. ![Upload and preview](docs/screenshots/upload.png) -->
 
 ## 🏗️ Architecture
